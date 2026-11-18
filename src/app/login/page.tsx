@@ -1,0 +1,10 @@
+'use client';
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { FileText } from 'lucide-react';
+export default function LoginPage() {
+  const router = useRouter();
+  const [email, setEmail] = useState(''), [password, setPassword] = useState(''), [busy, setBusy] = useState(false), [error, setError] = useState('');
+  async function submit(event: React.FormEvent) { event.preventDefault(); setBusy(true); setError(''); try { const response = await fetch('/api/auth/login', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email, password }) }); const data = await response.json(); if (!response.ok) throw new Error(data.error); router.push('/dashboard'); router.refresh(); } catch (error) { setError(error instanceof Error ? error.message : 'Sign in failed'); } finally { setBusy(false); } }
+  return <main className="min-h-screen flex items-center justify-center p-6 bg-[#f5f6fb]"><div className="w-full max-w-md"><div className="flex items-center justify-center gap-3 mb-9 text-2xl font-bold"><span className="bg-[#555bd6] text-white p-2 rounded-xl"><FileText size={24}/></span>Ajaia Docs</div><form onSubmit={submit} className="card p-8"><h1 className="text-3xl font-bold mb-2">Welcome back</h1><p className="muted mb-8">Sign in to your document workspace.</p><label className="block text-sm font-semibold mb-2" htmlFor="email">Email</label><input className="field mb-5" id="email" type="email" autoComplete="email" required value={email} onChange={e => setEmail(e.target.value)}/><label className="block text-sm font-semibold mb-2" htmlFor="password">Password</label><input className="field mb-5" id="password" type="password" autoComplete="current-password" required value={password} onChange={e => setPassword(e.target.value)}/>{error && <p role="alert" className="error mb-4">{error}</p>}<button disabled={busy} className="btn btn-primary w-full">{busy ? 'Signing in…' : 'Sign in'}</button></form><p className="text-center text-sm muted mt-5">Demo accounts: alice@ajaia-demo.com and bob@ajaia-demo.com</p></div></main>;
+}

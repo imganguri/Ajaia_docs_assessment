@@ -1,0 +1,12 @@
+node_modules/
+.next/
+.npm-cache/
+.vercel/
+.env
+.env.local
+data/*.db*
+coverage/
+*.tsbuildinfo
+tests/
+sample-import.txt
+Ajaia-Submission/
